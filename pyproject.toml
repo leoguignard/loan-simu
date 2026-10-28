@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "loan-simu"
+dynamic = ["version"]
+description = "Renovation loan simulator for France (prêt travaux, éco-PTZ, TAEG, taux d'usure)"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Léo Guignard" }]
+dependencies = ["PySide6>=6.5", "matplotlib>=3.7"]
+
+[project.gui-scripts]
+loan-simu = "loan_simu.ui.app:main"
+
+[tool.setuptools.dynamic]
+version = { attr = "loan_simu.__version__" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
