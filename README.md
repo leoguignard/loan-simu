@@ -2,24 +2,14 @@
 
 A desktop app (Qt / PySide6) to simulate a loan for renovating an apartment in France (*prêt travaux*).
 
+## Install
+
 ```bash
-pip install .            # or `pip install -e .` while developing
-loan-simu                # or: python -m loan_simu
-python -m unittest       # engine + UI smoke tests (needs the package installed, e.g. with -e)
+pip install loan-simu
+loan-simu            # or: python -m loan_simu
 ```
 
-```text
-src/loan_simu/
-  core.py         calculation engine (no GUI dependency)
-  ui/
-    app.py        main window and entry point
-    simple.py     simple mode
-    advanced.py   in-depth mode
-    widgets.py    cards, number fields, debt-ratio gauge
-    charts.py     matplotlib charts
-    theme.py      light/dark palettes and stylesheet
-tests/            engine tests and an offscreen UI smoke test
-```
+It needs Python 3.10 or later. PySide6 and matplotlib are installed with it.
 
 Numbers are shown in French format and you can type `4,5` or `4.5`. Results update as you type.
 
@@ -60,9 +50,55 @@ The in-depth mode also has an amortization table (combined or per loan, by month
 
 ## Keep these up to date
 
-The values in [src/loan_simu/core.py](src/loan_simu/core.py) change over time:
+The values in [src/loan_simu/core.py](https://github.com/leoguignard/loan-simu/blob/main/src/loan_simu/core.py) change over time:
 
 - **Usury rates** (`USURY_*`) are published every quarter by the Banque de France. The real-estate table is from Q4 2026. The consumer table is from Q3 2026, because the Q4 figures were not found.
 - **Éco-PTZ caps** (`ECO_PTZ_CATEGORIES`): check them on service-public.fr (page F19905).
 
+## Development
+
+```bash
+git clone https://github.com/leoguignard/loan-simu.git
+cd loan-simu
+pip install -e .
+python -m unittest       # engine tests + offscreen UI smoke test
+```
+
+```text
+src/loan_simu/
+  core.py         calculation engine (no GUI dependency)
+  ui/
+    app.py        main window and entry point
+    simple.py     simple mode
+    advanced.py   in-depth mode
+    widgets.py    cards, number fields, debt-ratio gauge
+    charts.py     matplotlib charts
+    theme.py      light/dark palettes and stylesheet
+tests/            engine tests and an offscreen UI smoke test
+```
+
+### Releasing to PyPI
+
+1. Bump `__version__` in `src/loan_simu/__init__.py`.
+2. Build and check:
+
+   ```bash
+   pip install build twine
+   rm -rf dist && python -m build
+   twine check dist/*
+   ```
+
+3. Upload to TestPyPI first, then to PyPI:
+
+   ```bash
+   twine upload --repository testpypi dist/*
+   twine upload dist/*
+   ```
+
+## Disclaimer
+
 This is a simulation, not a loan offer. Your bank's offer (*offre de prêt*) and its FISE are the documents that count.
+
+## License
+
+MIT, see [LICENSE](https://github.com/leoguignard/loan-simu/blob/main/LICENSE).
