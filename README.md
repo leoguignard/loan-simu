@@ -60,7 +60,7 @@ The values in [src/loan_simu/core.py](https://github.com/leoguignard/loan-simu/b
 ```bash
 git clone https://github.com/leoguignard/loan-simu.git
 cd loan-simu
-pip install -e .
+pip install -e ".[dev]"  # app + release tools (bumpver, build, twine)
 python -m unittest       # engine tests + offscreen UI smoke test
 ```
 
@@ -79,11 +79,18 @@ tests/            engine tests and an offscreen UI smoke test
 
 ### Releasing to PyPI
 
-1. Bump `__version__` in `src/loan_simu/__init__.py`.
+1. Bump the version with [bumpver](https://github.com/mbarkhau/bumpver). It updates `pyproject.toml` and
+   `src/loan_simu/__init__.py`, then commits and tags (needs a clean working tree):
+
+   ```bash
+   bumpver update --patch --dry   # preview the change
+   bumpver update --patch         # or --minor / --major
+   git push --follow-tags
+   ```
+
 2. Build and check:
 
    ```bash
-   pip install build twine
    rm -rf dist && python -m build
    twine check dist/*
    ```
